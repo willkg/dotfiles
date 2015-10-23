@@ -1,0 +1,30 @@
+[user]
+	name = Will Kahn-Greene
+	email = willkg@mozilla.com
+[core]
+	excludesfile = ~/.gitignore
+[color]
+	status = auto
+	branch = auto
+	diff = auto
+[alias]
+	# List all the aliases
+	aliases = !git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /'
+	# Show a specific commit
+	whatis = show -s --pretty='tformat:%h (%s, %ad)'
+	# Show the things I did this week
+	week = log --pretty=format:\"%h %ar\t%s\" --author=\"Will Kahn-Greene\" --after=\"7 days ago\"
+	# Show the last two weeks of stuff
+	biweek = log --date=short --format=\"%ad %h %s\" --after=\"14 days ago\"
+	# Nice log with branches
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	# Get working master directory up-to-date
+	up = !git pull --rebase --prune $@ && git submodule update --init --recursive
+	# Savepoint
+	save = !git add -u && git commit -m 'SAVEPOINT' --no-verify
+	# Resets the last commit, but keeps all the changes in the working directory
+	undo = reset HEAD~1 --mixed
+	# Clean every branch except master
+	bclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs -r git branch -d; }; f"
+	# Cleanup, return to master and update
+	bdone = "!f() { git checkout ${1-master} && git up && git bclean ${1-master}; }; f"
