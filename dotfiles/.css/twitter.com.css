@@ -1,3 +1,9 @@
+/* removes all sponsored tweet bullshit */
 .promoted-tweet {
+  display: none;
+}
+
+/* removes the "who to follow?" bullshit */
+li[data-item-type='who_to_follow_entry'] {
   display: none;
 }
