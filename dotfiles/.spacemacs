@@ -28,13 +28,14 @@ values."
      ;; auto-completion
      ;; better-defaults
      ;; emacs-lisp
-     django ;; ?
+     ;; django ;; ?
      editorconfig
      git
-     github ;; ?
+     ;; github ;; ?
+     django
      html
      javascript
-     markdown
+     ;; markdown
      python
      (shell :variables shell-default-shell 'eshell)
      ;; org
@@ -217,6 +218,9 @@ user code."
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
   (windmove-default-keybindings 'meta)
+
+  ;; tell flymake to use flake8
+  (setq flymake-python-pyflakes-executable "flake8")
 
   ;; Enable whitespace mode for makefiles because otherwise OMG!
   (add-hook 'makefile-mode-hook 'whitespace-mode)
