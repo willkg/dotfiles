@@ -19,7 +19,7 @@ IS_TEST = False
 
 
 def path(*args):
-    return '/'.join(args)
+    return os.path.join(*args)
 
 
 def delete(path):
@@ -46,9 +46,9 @@ def copy(src, target):
     else:
         os.symlink(src, target)
 
-        
+
 thisdir = os.path.dirname(os.path.realpath(__file__))
-dotfiles = path(thisdir, 'dotfiles')
+dotfilesdir = path(thisdir, 'dotfiles')
 homedir  = os.path.expanduser('~')
 
 
@@ -62,27 +62,32 @@ if __name__ == '__main__':
         IS_FORCE = '--force' in args
         IS_TEST = '--test' in args
 
-        print 'source: %s' % dotfiles
+        print 'source: %s' % dotfilesdir
         print 'target: %s' % homedir
 
-        for name in os.listdir(dotfiles):
-            src = path(dotfiles, name)
-            target = path(homedir, name)
+        for root, dirs, files in os.walk(dotfilesdir):
+            for fn in files:
+                pathpart = root[len(dotfilesdir)+1:]
+                src = path(root, fn)
+                target = path(homedir, pathpart, fn)
 
-            # FIXME: This should descend directory trees and copy each
-            # file one-by-one so that copying is additive. That allows
-            # us to have specific files in version control, but not
-            # have to have entire directory trees.
-            print '%s -> %s' % (src, target)
-            if os.path.exists(target):
-                if IS_FORCE:
-                    print '  deleting %s ...' % target
-                    delete(target)
-                else:
-                    print '  %s is in the way ... skipping' % target
-                    continue
+                print '%s -> %s' % (src, target)
 
-            copy(src, target)
+                # Create the target directory if it doesn't exist.
+                targetdir = os.path.dirname(target)
+                if not os.path.exists(targetdir):
+                    print '  creating directory %s ...' % targetdir
+                    os.makedirs(targetdir)
+
+                if os.path.exists(target):
+                    if IS_FORCE:
+                        print '  deleting %s ...' % target
+                        delete(target)
+                    else:
+                        print '  %s is in the way ... skipping' % target
+                        continue
+
+                copy(src, target)
 
     else:
         print 'unrecognized command %s ... exiting' % args[0]

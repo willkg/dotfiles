@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Firefox Dev
+Comment=Firefox Dev Edition
+Exec=/home/willkg/mozilla/firefox-dev/firefox
+Icon=/home/willkg/mozilla/firefox-dev/browser/icons/mozicon128.png
+Terminal=false
+Type=Application
+Categories=GNOME;GTK;Network;WebBrowser;
