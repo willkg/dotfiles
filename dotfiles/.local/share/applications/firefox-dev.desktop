@@ -2,7 +2,7 @@
 Version=1.0
 Name=Firefox Dev
 Comment=Firefox Dev Edition
-Exec=/home/willkg/mozilla/firefox-dev/firefox
+Exec=/home/willkg/mozilla/firefox-dev/firefox %u
 Icon=/home/willkg/mozilla/firefox-dev/browser/icons/mozicon128.png
 Terminal=false
 Type=Application
