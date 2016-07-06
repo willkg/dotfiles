@@ -219,11 +219,15 @@ user code."
 layers configuration. You are free to put any user code."
   (windmove-default-keybindings 'meta)
 
-  ;; tell flymake to use flake8
-  (setq flymake-python-pyflakes-executable "flake8")
+  ;; tell flymake to use python2 flake8
+  ;; (install it with pipsi)
+  (setq flymake-python-pyflakes-executable "/home/willkg/.local/bin/flake8")
 
   ;; Enable whitespace mode for makefiles because otherwise OMG!
   (add-hook 'makefile-mode-hook 'whitespace-mode)
+
+  ;; Nix eldoc thing
+  (remove-hook 'python-mode-hook 'spacemacs//init-eldoc-python-mode)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
