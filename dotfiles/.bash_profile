@@ -11,3 +11,5 @@ fi
 
 export PATH
 export EDITOR="/usr/bin/emacs --no-window-system --quick"
+
+alias dc='docker-compose'
