@@ -2,7 +2,7 @@
 
 # User specific environment and startup programs
 
-PATH=$PATH:$HOME/.local/bin:$HOME/bin
+PATH=$PATH:$HOME/.local/bin:$HOME/bin:$HOME/.cargo/bin
 
 # If git-prompt is installed, run that.
 if [ -f ~/programs/git-prompt/git-prompt.sh ]; then
@@ -10,6 +10,7 @@ if [ -f ~/programs/git-prompt/git-prompt.sh ]; then
 fi
 
 export PATH
-export EDITOR="/usr/bin/emacs --no-window-system --quick"
+# export EDITOR="/usr/bin/emacs --no-window-system --quick"
+export EDITOR="/usr/bin/emacs --no-window-system"
 
 alias dc='docker-compose'

@@ -29,6 +29,7 @@ values."
      ;; better-defaults
      ;; emacs-lisp
      ;; django ;; ?
+     org
      editorconfig
      git
      ;; github ;; ?
@@ -49,7 +50,10 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages
+   '(
+     editorconfig
+     )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages 
    '(
@@ -228,6 +232,12 @@ layers configuration. You are free to put any user code."
 
   ;; Nix eldoc thing
   (remove-hook 'python-mode-hook 'spacemacs//init-eldoc-python-mode)
+
+  ;; Enable editorconfig
+  (editorconfig-mode 1)
+
+  ;; Set bullets to * which effectively disables org-bullets
+  (setq org-bullets-bullet-list '("*" "*" "*" "*"))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
