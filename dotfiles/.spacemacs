@@ -20,6 +20,10 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
+     ;; php
+     ;; ruby
+     markdown
+     ; php
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -30,7 +34,7 @@ values."
      ;; emacs-lisp
      ;; django ;; ?
      org
-     editorconfig
+     ;; editorconfig
      git
      ;; github ;; ?
      django
@@ -105,7 +109,7 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro"
+   dotspacemacs-default-font '("Ubuntu Mono"
                                :size 13
                                :weight normal
                                :width normal
@@ -215,6 +219,9 @@ user code."
      (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
      )
    )
+
+  ;; Set interpreter to python3
+  (setq python-shell-interpreter "python3")
   )
 
 (defun dotspacemacs/user-config ()
@@ -223,7 +230,7 @@ user code."
 layers configuration. You are free to put any user code."
   (windmove-default-keybindings 'meta)
 
-  ;; tell flymake to use python2 flake8
+  ;; tell flymake to use python3 flake8
   ;; (install it with pipsi)
   (setq flymake-python-pyflakes-executable "/home/willkg/.local/bin/flake8")
 
@@ -238,7 +245,5 @@ layers configuration. You are free to put any user code."
 
   ;; Set bullets to * which effectively disables org-bullets
   (setq org-bullets-bullet-list '("*" "*" "*" "*"))
-  )
 
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
+  )
