@@ -1,0 +1,59 @@
+#!/usr/bin/python
+"""
+Generates git branches based on bugzilla id and summary.
+
+Usage::
+
+    $ git bzbranch [BUGID]
+
+"""
+
+import httplib
+import json
+import string
+import subprocess
+import sys
+from distutils.spawn import find_executable
+
+
+GITCMD = find_executable('git')
+HOST = 'bugzilla.mozilla.org'
+
+
+def get_bug_data(num=''):
+    while True:
+        if num:
+            conn = httplib.HTTPSConnection(HOST)
+            headers = {'Accept': 'application/json'}
+            conn.request('GET', '/rest/bug/%s' % num.strip(), headers=headers)
+            resp = conn.getresponse()
+            if resp.status != 200:
+                print 'Error %s: %s' % (resp.status, resp.reason)
+                raise Exception('Bad response')
+
+            data = json.loads(resp.read())
+            bug = data['bugs'][0]
+            print '%s: %s' % (bug['id'], bug['summary'])
+            if raw_input('Is this right? (Y/n) ').strip() == 'y':
+                return (bug['id'], bug['summary'])
+
+        num = raw_input('Bug number?: ')
+
+
+ALLOWED = string.ascii_letters + string.digits + ' '
+
+
+def main(argv):
+    bug_id, bug_sum = get_bug_data(argv and argv[0] or '')
+    bug_sum = ''.join([c.lower() if c in ALLOWED else ''
+                       for c in bug_sum])
+    bug_sum = bug_sum.replace(' ', '-')
+
+    branch_name = '%s-%s' % (bug_id, bug_sum[:10])
+    branch_name = raw_input('Branch name? ["%s"] ' % branch_name).strip() or branch_name
+
+    print subprocess.check_output([GITCMD, 'checkout', '-b', branch_name])
+
+
+if __name__ == '__main__':
+    sys.exit(main(sys.argv[1:]))

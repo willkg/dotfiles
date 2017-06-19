@@ -1,0 +1,40 @@
+#!/usr/bin/python
+"""
+Shows branches in a prettier and more informative way because I forget
+what I'm doing sometimes.
+"""
+
+import subprocess
+import sys
+import datetime
+
+
+GITCMD = '/usr/bin/git'
+
+
+def get_details(ref):
+    last_commit = subprocess.check_output(
+        [GITCMD, 'show', '--format=%h::%at', ref])
+    last_commit = last_commit.splitlines()[0].split('::')
+    datestamp = datetime.datetime.fromtimestamp(int(last_commit[1]))
+    age = datetime.datetime.now() - datestamp
+    return (ref, last_commit[0], age, datestamp)
+
+
+def main(argv):
+    output = []
+    branches = subprocess.check_output([GITCMD, 'branch'])
+    for mem in branches.splitlines():
+        mem = mem.lstrip('*').strip()
+        if mem.startswith('(detached'):
+            continue
+        output.append(get_details(mem))
+
+    output.sort(key=lambda mem: -mem[2])
+
+    for mem in output:
+        print '%-30s %-8s %s (%s)' % mem
+
+
+if __name__ == '__main__':
+    sys.exit(main(sys.argv[1:]))
