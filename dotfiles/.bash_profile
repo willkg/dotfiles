@@ -11,6 +11,7 @@ fi
 
 export PATH
 # export EDITOR="/usr/bin/emacs --no-window-system --quick"
-export EDITOR="/usr/bin/emacs --no-window-system"
+# export EDITOR="/usr/bin/emacs --no-window-system"
+export EDITOR=vim
 
 alias dc='docker-compose'
