@@ -15,3 +15,5 @@ export PATH
 export EDITOR=vim
 
 alias dc='docker-compose'
+
+export PATH="$HOME/.cargo/bin:$PATH"
