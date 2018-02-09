@@ -5,8 +5,9 @@ Ubuntu notes
 Status
 ======
 
-:April 8th, 2016: Last update with Ubuntu Wily 15.10.
-:May 25th, 2016: Updated to Xenity 16.04
+:April 8th, 2016:    Last update with Ubuntu Wily 15.10
+:May 25th, 2016:     Updated to Xenity 16.04
+:January 17th, 2018: Updated to Ubuntu Aardvark 17.10
 
 
 After installing Ubuntu
@@ -19,39 +20,34 @@ Updates::
 
 Install things::
 
-  $ sudo apt-get install \
+  $ sudo apt install \
       terminator \
-      unity-tweak-tool \
       gnome-tweak-tool \
       openssh-server
 
 Fix things:
 
-1. open unity tweak tool
-
-   1. go to Unity -> Additional
-   2. Nix the Invoke HUD shortcut because that's SOOO annoying
-
-3. open system settings
-
-   1. Go to keyboard -> shortcuts tab
-
-4. open gnome tweak tool
+1. Open gnome tweak tool
 
    1. Fix the caps lock to be a ctrl
 
-5. install shutter and the scp plugin: https://github.com/cweiske/shutter-scp
-
-6. install dev stuff::
+2. Install dev stuff::
 
      $ sudo apt install \
+         build-essential \
+         docker.io \
+         docker-compose \
          git \
-         emacs
+         emacs \
+         vim
 
+3. Install pipsi using their script
 
-To install nodejs and npm:
+   1. Install tools using pipsi
 
-https://github.com/nodesource/distributions#debinstall
+4. Install shutter and the scp plugin: https://github.com/cweiske/shutter-scp
+
+5. Install nodejs and npm: https://github.com/nodesource/distributions#debinstall
 
 
 OpenVPN
