@@ -17,3 +17,6 @@ export EDITOR=vim
 alias dc='docker-compose'
 
 export PATH="$HOME/.cargo/bin:$PATH"
+
+export WORKON_HOME=$HOME/venvs/
+source $HOME/.local/bin/virtualenvwrapper.sh

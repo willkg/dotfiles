@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Install virtualenv-wrapper
+pip install --user virtualenvwrapper
+
 # Install pipenv
 pip install --user pipenv
 
