@@ -5,9 +5,10 @@ Ubuntu notes
 Status
 ======
 
-:April 8th, 2016:    Last update with Ubuntu Wily 15.10
-:May 25th, 2016:     Updated to Xenity 16.04
-:January 17th, 2018: Updated to Ubuntu Aardvark 17.10
+:April 8th, 2016:     Last update with Ubuntu Wily 15.10
+:May 25th, 2016:      Updated to Xenity 16.04
+:January 17th, 2018:  Updated to Ubuntu Aardvark 17.10
+:February 11th, 2019: Switch pipsi to pipx
 
 
 After installing Ubuntu
@@ -41,13 +42,12 @@ Fix things:
          emacs \
          vim
 
-3. Install pipsi using their script
+3. Install pipsi::
 
-   1. Install tools using pipsi
+      pip install --user pipx
+      pipx ensurepath
 
-4. Install shutter and the scp plugin: https://github.com/cweiske/shutter-scp
-
-5. Install nodejs and npm: https://github.com/nodesource/distributions#debinstall
+4. Install tools using pipsi
 
 
 OpenVPN
