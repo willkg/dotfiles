@@ -16,7 +16,14 @@ export EDITOR=vim
 
 alias dc='docker-compose'
 
-export PATH="$HOME/.cargo/bin:$PATH"
+export PYENV_ROOT="$HOME/.pyenv"
+
+export PATH="$HOME/.cargo/bin:$HOME/go/bin:$PYENV_ROOT/bin:$PATH"
 
 export WORKON_HOME=$HOME/venvs/
 source $HOME/.local/bin/virtualenvwrapper.sh
+
+# If pyenv is installed, init it
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
