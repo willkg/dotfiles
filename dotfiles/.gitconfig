@@ -13,9 +13,11 @@
 	# Show a specific commit
 	whatis = show -s --pretty='tformat:%h (%s, %ad)'
 	# Show the things I did this week
-	week = log --pretty=format:\"%h %ar\t%s\" --author=\"Will Kahn-Greene\" --after=\"7 days ago\"
+	week = !git log --pretty=format:\"%h %ar\t%s\" --author=\"Will Kahn-Greene\" --after=\"7 days ago\" | grep -v Merge
 	# Show the last two weeks of stuff
 	biweek = log --date=short --format=\"%ad %h %s\" --after=\"14 days ago\"
+	# Show the last month
+	month = !git log --date=short --format=\"%ad %h %s\" --after=\"1 month ago\" | grep -v Merge
 	# Nice log with branches
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	# Get working master directory up-to-date
