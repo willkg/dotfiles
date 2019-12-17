@@ -2,28 +2,27 @@
 
 # User specific environment and startup programs
 
-PATH=$PATH:$HOME/.local/bin:$HOME/bin:$HOME/.cargo/bin
+# FIXME(willkg): somehow ~/.cargo/bin and ~/.local/bin is already in the path at
+# this point.
+# export PATH="$HOME/.cargo/bin:$HOME/go/bin:$HOME/.local/bin:$PATH"
+export PATH="$HOME/go/bin:$PATH"
 
 # If git-prompt is installed, run that.
 if [ -f ~/programs/git-prompt/git-prompt.sh ]; then
   . ~/programs/git-prompt/git-prompt.sh
 fi
 
-export PATH
-# export EDITOR="/usr/bin/emacs --no-window-system --quick"
-# export EDITOR="/usr/bin/emacs --no-window-system"
 export EDITOR=vim
 
 alias dc='docker-compose'
 
+# If pyenv is installed, init it
 export PYENV_ROOT="$HOME/.pyenv"
-
-export PATH="$HOME/.cargo/bin:$HOME/go/bin:$PYENV_ROOT/bin:$PATH"
+if [ -d "${PYENV_ROOT}" ]; then
+  export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init -)"
+  eval "$(pyenv virtualenv-init -)"
+fi
 
 export WORKON_HOME=$HOME/venvs/
 source $HOME/.local/bin/virtualenvwrapper.sh
-
-# If pyenv is installed, init it
-if command -v pyenv 1>/dev/null 2>&1; then
-  eval "$(pyenv init -)"
-fi
