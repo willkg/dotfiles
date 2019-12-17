@@ -5,10 +5,11 @@ Ubuntu notes
 Status
 ======
 
-:April 8th, 2016:     Last update with Ubuntu Wily 15.10
-:May 25th, 2016:      Updated to Xenity 16.04
-:January 17th, 2018:  Updated to Ubuntu Aardvark 17.10
-:February 11th, 2019: Switch pipsi to pipx
+* December 13th, 2019: Updated to Ubuntu 19.10
+* February 11th, 2019: Switch pipsi to pipx
+* January 17th, 2018: Updated to Ubuntu Aardvark 17.10
+* May 25th, 2016: Updated to Xenity 16.04
+* April 8th, 2016: Last update with Ubuntu Wily 15.10
 
 
 After installing Ubuntu
@@ -23,8 +24,7 @@ Install things::
 
   $ sudo apt install \
       terminator \
-      gnome-tweak-tool \
-      openssh-server
+      gnome-tweak-tool
 
 Fix things:
 
@@ -39,15 +39,62 @@ Fix things:
          docker.io \
          docker-compose \
          git \
-         emacs \
          vim
 
-3. Install pipsi::
+   Install things for pyenv::
 
-      pip install --user pipx
-      pipx ensurepath
+     $ sudo apt install \
+         libssl-dev \
+         zlib1g-dev \
+         libbz2-dev \
+         libreadline-dev \
+         libsqlite3-dev \
+         wget \
+         curl \
+         llvm \
+         libncurses5-dev \
+         libncursesw5-dev \
+         xz-utils \
+         tk-dev \
+         libffi-dev \
+         liblzma-dev \
+         python-openssl 
 
-4. Install tools using pipsi
+3. Add user to docker group. Reboot.
+
+4. Install pyenv using their installer. https://github.com/pyenv/pyenv-installer
+
+5. Set global Python::
+
+      $ pyenv global VERSION
+
+6. Install virtualenvwrapper::
+
+      $ pip install --user virtualenvwrapper
+
+7. Install pipx::
+
+      $ pip install --user pipx
+      $ pipx ensurepath
+
+8. Install tools using pipx one tool at a time::
+
+      autopep8
+      aws
+      bandit
+      black
+      check-manifest
+      crashstats-tools
+      docker-compose
+      docutils
+      flake8
+      hashin
+      pipdeptree
+      piprot
+      sphinx
+      tox
+      twine
+      youtube-dl
 
 
 OpenVPN
