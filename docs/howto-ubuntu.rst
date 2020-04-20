@@ -13,6 +13,22 @@ Status
 * April 8th, 2016: Last update with Ubuntu Wily 15.10
 
 
+Installing Ubuntu
+=================
+
+1. Download Desktop image from http://releases.ubuntu.com/19.10/
+2. Burn to DVD: https://help.ubuntu.com/community/BurningIsoHowto
+   
+   or
+   
+   Install to USB flash drive: https://help.ubuntu.com/community/Installation/FromUSBStick
+
+3. Boot off of DVD or USB flash drive and run the install process
+
+   * Pick defaults through install process.
+   * Make sure to enable encrypting the disk.
+
+
 After installing Ubuntu
 =======================
 
