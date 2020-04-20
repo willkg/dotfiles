@@ -5,6 +5,7 @@ Ubuntu notes
 Status
 ======
 
+* April 20th, 2020: Switch to tilix; remove ``$``
 * December 13th, 2019: Updated to Ubuntu 19.10
 * February 11th, 2019: Switch pipsi to pipx
 * January 17th, 2018: Updated to Ubuntu Aardvark 17.10
@@ -17,13 +18,14 @@ After installing Ubuntu
 
 Updates::
 
-  $ sudo apt update
-  $ sudo apt upgrade
+  sudo apt update
+
+  sudo apt upgrade
 
 Install things::
 
-  $ sudo apt install \
-      terminator \
+  sudo apt install \
+      tilix \
       gnome-tweak-tool
 
 Fix things:
@@ -34,7 +36,7 @@ Fix things:
 
 2. Install dev stuff::
 
-     $ sudo apt install \
+     sudo apt install \
          build-essential \
          docker.io \
          docker-compose \
@@ -43,7 +45,7 @@ Fix things:
 
    Install things for pyenv::
 
-     $ sudo apt install \
+     sudo apt install \
          libssl-dev \
          zlib1g-dev \
          libbz2-dev \
@@ -66,16 +68,17 @@ Fix things:
 
 5. Set global Python::
 
-      $ pyenv global VERSION
+      pyenv global VERSION
 
 6. Install virtualenvwrapper::
 
-      $ pip install --user virtualenvwrapper
+      pip install --user virtualenvwrapper
 
 7. Install pipx::
 
-      $ pip install --user pipx
-      $ pipx ensurepath
+      pip install --user pipx
+
+      pipx ensurepath
 
 8. Install tools using pipx one tool at a time::
 
@@ -149,4 +152,5 @@ How to install a specific version of a package::
 How to ignore package install errors::
 
     apt-get download <package>=<version>
+
     dpkg -i --ignore-depends=<badpackage> <filename.deb>
