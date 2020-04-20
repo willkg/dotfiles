@@ -23,7 +23,12 @@ Installing Ubuntu
    
    Install to USB flash drive: https://help.ubuntu.com/community/Installation/FromUSBStick
 
-3. Boot off of DVD or USB flash drive and run the install process
+3. (Optional) Back up existing drive.
+   
+   I clean out my user directory (remove virtual envs, remove cache files, etc)
+   and then back up the user directory.
+
+4. Boot off of DVD or USB flash drive and run the install process
 
    * Pick defaults through install process.
    * Make sure to enable encrypting the disk.
