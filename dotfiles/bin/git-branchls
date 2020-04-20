@@ -1,40 +1,62 @@
-#!/usr/bin/python
-"""
-Shows branches in a prettier and more informative way because I forget
-what I'm doing sometimes.
-"""
+#!/usr/bin/env python
 
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, you can obtain one at http://mozilla.org/MPL/2.0/.
+
+# This expects Python 3.
+
+import datetime
+from distutils.spawn import find_executable
 import subprocess
 import sys
-import datetime
 
 
-GITCMD = '/usr/bin/git'
+GITCMD = find_executable("git")
 
 
 def get_details(ref):
     last_commit = subprocess.check_output(
-        [GITCMD, 'show', '--format=%h::%at', ref])
-    last_commit = last_commit.splitlines()[0].split('::')
+        [GITCMD, "show", "--format=%h::%at", ref]
+    )
+    last_commit = last_commit.decode("utf-8")
+    last_commit = last_commit.splitlines()[0].split("::")
     datestamp = datetime.datetime.fromtimestamp(int(last_commit[1]))
     age = datetime.datetime.now() - datestamp
     return (ref, last_commit[0], age, datestamp)
 
 
-def main(argv):
-    output = []
-    branches = subprocess.check_output([GITCMD, 'branch'])
+def clean_branches(branches):
+    cleaned = []
     for mem in branches.splitlines():
-        mem = mem.lstrip('*').strip()
-        if mem.startswith('(detached'):
+        mem = mem.decode("utf-8")
+        mem = mem.lstrip("*").strip()
+        if mem.startswith(("(detached", "master")):
             continue
-        output.append(get_details(mem))
+        cleaned.append(get_details(mem))
 
-    output.sort(key=lambda mem: -mem[2])
-
-    for mem in output:
-        print '%-30s %-8s %s (%s)' % mem
+    cleaned.sort(key=lambda mem: -mem[2])
+    return cleaned
 
 
-if __name__ == '__main__':
+def main(argv):
+    branches = subprocess.check_output(
+        [GITCMD, "branch", "--no-merged", "master"]
+    )
+    branches = clean_branches(branches)
+    print("Branches:")
+    for mem in branches:
+        print("  %-30s %-8s %s (%s)" % mem)
+
+    merged_branches = subprocess.check_output(
+        [GITCMD, "branch", "--merged", "master"]
+    )
+    merged_branches = clean_branches(merged_branches)
+    if merged_branches:
+        print("Merged branches that can be removed:")
+        for mem in merged_branches:
+            print("  %-30s %-8s %s (%s)" % mem)
+
+
+if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))

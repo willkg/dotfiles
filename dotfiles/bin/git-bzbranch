@@ -1,59 +1,71 @@
-#!/usr/bin/python
-"""
-Generates git branches based on bugzilla id and summary.
+#!/usr/bin/env python
 
-Usage::
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, you can obtain one at http://mozilla.org/MPL/2.0/.
 
-    $ git bzbranch [BUGID]
+# This expects Python 3
 
-"""
-
-import httplib
+from distutils.spawn import find_executable
+from http.client import HTTPSConnection
 import json
 import string
 import subprocess
 import sys
-from distutils.spawn import find_executable
 
 
-GITCMD = find_executable('git')
-HOST = 'bugzilla.mozilla.org'
+GITCMD = find_executable("git")
+HOST = "bugzilla.mozilla.org"
 
 
-def get_bug_data(num=''):
+def get_bug_data(num=""):
     while True:
         if num:
-            conn = httplib.HTTPSConnection(HOST)
-            headers = {'Accept': 'application/json'}
-            conn.request('GET', '/rest/bug/%s' % num.strip(), headers=headers)
+            conn = HTTPSConnection(HOST)
+            headers = {"Accept": "application/json"}
+            conn.request("GET", "/rest/bug/%s" % num.strip(), headers=headers)
             resp = conn.getresponse()
             if resp.status != 200:
-                print 'Error %s: %s' % (resp.status, resp.reason)
-                raise Exception('Bad response')
+                print("Error %s: %s" % (resp.status, resp.reason))
+                raise Exception("Bad response")
 
             data = json.loads(resp.read())
-            bug = data['bugs'][0]
-            print '%s: %s' % (bug['id'], bug['summary'])
-            if raw_input('Is this right? (Y/n) ').strip() == 'y':
-                return (bug['id'], bug['summary'])
+            bug = data["bugs"][0]
+            print("%s: %s" % (bug["id"], bug["summary"]))
+            if input("Is this right? (Y/n) ").strip() == "y":
+                return (bug["id"], bug["summary"])
 
-        num = raw_input('Bug number?: ')
+        num = input("Bug number?: ")
 
 
-ALLOWED = string.ascii_letters + string.digits + ' '
+ALLOWED = string.ascii_letters + string.digits + " "
+NIX_WORDS = [
+    "traceback",
+]
+
+
+def generate_branch_name(bug_id, bug_sum):
+    bug_sum = "".join([c.lower() if c in ALLOWED else "" for c in bug_sum])
+    bug_sum = bug_sum.replace(" ", "-")
+
+    for nix_word in NIX_WORDS:
+        if bug_sum.startswith(nix_word):
+            bug_sum = bug_sum[len(nix_word):]
+        bug_sum = bug_sum.strip("-")
+
+    branch_name = "%s-%s" % (bug_id, bug_sum[:10])
+    return branch_name.strip("-")
 
 
 def main(argv):
-    bug_id, bug_sum = get_bug_data(argv and argv[0] or '')
-    bug_sum = ''.join([c.lower() if c in ALLOWED else ''
-                       for c in bug_sum])
-    bug_sum = bug_sum.replace(' ', '-')
+    bug_id, bug_sum = get_bug_data(argv and argv[0] or "")
+    branch_name = generate_branch_name(bug_id, bug_sum)
+    ret = input("Branch name? [%s] or %s-" % (branch_name, bug_id)).strip()
+    if ret:
+        branch_name = "%s-%s" % (bug_id, ret)
 
-    branch_name = '%s-%s' % (bug_id, bug_sum[:10])
-    branch_name = raw_input('Branch name? ["%s"] ' % branch_name).strip() or branch_name
-
-    print subprocess.check_output([GITCMD, 'checkout', '-b', branch_name])
+    subprocess.check_output([GITCMD, "checkout", "-b", branch_name])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))
