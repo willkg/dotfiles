@@ -15,6 +15,20 @@ import sys
 GITCMD = find_executable("git")
 
 
+def get_main_branch():
+    branches = subprocess.check_output(
+        [GITCMD, "for-each-ref", "--format='%(refname)'", "refs/heads"]
+    )
+    branches = branches.decode("utf-8").splitlines()
+
+    # FIXME(willkg): This is goofy and works with how I have my stuff set up.
+    if "'refs/heads/main'" in branches:
+        return "main"
+    if "'refs/heads/master'" in branches:
+        return "master"
+    raise Exception("Can't find branch name (%r)" % branches)
+
+
 def get_details(ref):
     last_commit = subprocess.check_output(
         [GITCMD, "show", "--format=%h::%at", ref]
@@ -26,12 +40,12 @@ def get_details(ref):
     return (ref, last_commit[0], age, datestamp)
 
 
-def clean_branches(branches):
+def clean_branches(main_branch, branches):
     cleaned = []
     for mem in branches.splitlines():
         mem = mem.decode("utf-8")
         mem = mem.lstrip("*").strip()
-        if mem.startswith(("(detached", "master")):
+        if mem.startswith(("(detached", main_branch)):
             continue
         cleaned.append(get_details(mem))
 
@@ -40,18 +54,23 @@ def clean_branches(branches):
 
 
 def main(argv):
+    main_branch = get_main_branch()
+    print("Using main branch %r" % main_branch)
     branches = subprocess.check_output(
-        [GITCMD, "branch", "--no-merged", "master"]
+        [GITCMD, "branch", "--no-merged", main_branch]
     )
-    branches = clean_branches(branches)
-    print("Branches:")
-    for mem in branches:
-        print("  %-30s %-8s %s (%s)" % mem)
+    branches = clean_branches(main_branch, branches)
+    if branches:
+        print("Branches:")
+        for mem in branches:
+            print("  %-30s %-8s %s (%s)" % mem)
+    else:
+        print("No branches!")
 
     merged_branches = subprocess.check_output(
-        [GITCMD, "branch", "--merged", "master"]
+        [GITCMD, "branch", "--merged", main_branch]
     )
-    merged_branches = clean_branches(merged_branches)
+    merged_branches = clean_branches(main_branch, merged_branches)
     if merged_branches:
         print("Merged branches that can be removed:")
         for mem in merged_branches:
