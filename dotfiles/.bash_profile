@@ -13,6 +13,11 @@ if [ -f ~/programs/git-prompt/git-prompt.sh ]; then
   . ~/programs/git-prompt/git-prompt.sh
 fi
 
+# Source completions
+for fn in ~/completions/*.bash; do
+    . ${fn}
+done
+
 # Add to man path
 export MANPATH=$MANPATH:$HOME/man
 
