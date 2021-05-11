@@ -5,12 +5,16 @@
 # FIXME(willkg): somehow ~/.cargo/bin and ~/.local/bin is already in the path at
 # this point.
 # export PATH="$HOME/.cargo/bin:$HOME/go/bin:$HOME/.local/bin:$PATH"
-export PATH="$HOME/go/bin:$PATH"
+export PATH=$PATH:$HOME/go/bin
+export PATH=$PATH:/usr/local/go/bin
 
 # If git-prompt is installed, run that.
 if [ -f ~/programs/git-prompt/git-prompt.sh ]; then
   . ~/programs/git-prompt/git-prompt.sh
 fi
+
+# Add to man path
+export MANPATH=$MANPATH:$HOME/man
 
 export EDITOR=vim
 

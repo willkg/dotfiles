@@ -32,3 +32,5 @@
 	bdone = "!f() { git checkout ${1-master} && git up && git bclean ${1-master}; }; f"
 [merge]
 	conflictstyle = diff3
+[init]
+	defaultBranch = main

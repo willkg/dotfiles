@@ -53,16 +53,16 @@ def generate_branch_name(bug_id, bug_sum):
             bug_sum = bug_sum[len(nix_word):]
         bug_sum = bug_sum.strip("-")
 
-    branch_name = "%s-%s" % (bug_id, bug_sum[:10])
+    branch_name = f"bug-{bug_id}-{bug_sum[:10]}"
     return branch_name.strip("-")
 
 
 def main(argv):
     bug_id, bug_sum = get_bug_data(argv and argv[0] or "")
     branch_name = generate_branch_name(bug_id, bug_sum)
-    ret = input("Branch name? [%s] or %s-" % (branch_name, bug_id)).strip()
+    ret = input(f"Branch name? [{branch_name}] or bug-{bug_id}-").strip()
     if ret:
-        branch_name = "%s-%s" % (bug_id, ret)
+        branch_name = f"bug-{bug_id}-{ret}"
 
     subprocess.check_output([GITCMD, "checkout", "-b", branch_name])
 

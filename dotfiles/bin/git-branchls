@@ -22,6 +22,7 @@ def get_main_branch():
     branches = branches.decode("utf-8").splitlines()
 
     # FIXME(willkg): This is goofy and works with how I have my stuff set up.
+    # It prefers main to master.
     if "'refs/heads/main'" in branches:
         return "main"
     if "'refs/heads/master'" in branches:

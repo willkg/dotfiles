@@ -115,6 +115,7 @@ Fix things:
       sphinx
       tox
       twine
+      yamllint
       youtube-dl
 
 
