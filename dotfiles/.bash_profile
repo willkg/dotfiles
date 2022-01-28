@@ -2,11 +2,23 @@
 
 # User specific environment and startup programs
 
-# FIXME(willkg): somehow ~/.cargo/bin and ~/.local/bin is already in the path at
-# this point.
-# export PATH="$HOME/.cargo/bin:$HOME/go/bin:$HOME/.local/bin:$PATH"
-export PATH=$PATH:$HOME/go/bin
-export PATH=$PATH:/usr/local/go/bin
+# Add home bin
+if [ -d "$HOME/bin" ]; then
+    export PATH=$PATH:$HOME/bin
+fi
+
+# Add go bin directories
+if [ -d "$HOME/go/bin" ]; then
+    export PATH=$PATH:$HOME/go/bin
+fi
+if [ -d "/usr/local/go/bin" ]; then
+    export PATH=$PATH:/usr/local/go/bin
+fi
+
+# Add ~/.local/bin directory to pick up pipx installed Python things
+if [ -d "$HOME/.local/bin" ]; then
+    export PATH=$PATH:$HOME/.local/bin
+fi
 
 # If git-prompt is installed, run that.
 if [ -f ~/programs/git-prompt/git-prompt.sh ]; then
@@ -29,9 +41,16 @@ alias dc='docker-compose'
 export PYENV_ROOT="$HOME/.pyenv"
 if [ -d "${PYENV_ROOT}" ]; then
   export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init --path)"
+
   eval "$(pyenv init -)"
-  eval "$(pyenv virtualenv-init -)"
+  # eval "$(pyenv virtualenv-init -)"
 fi
 
 export WORKON_HOME=$HOME/venvs/
 source $HOME/.local/bin/virtualenvwrapper.sh
+
+# If cargo env is around, source that to pick up Rust things
+if [ -f "$HOME/.cargo/env" ]; then
+    . "$HOME/.cargo/env"
+fi
