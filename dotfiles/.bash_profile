@@ -15,9 +15,10 @@ if [ -d "/usr/local/go/bin" ]; then
     export PATH=$PATH:/usr/local/go/bin
 fi
 
-# Add ~/.local/bin directory to pick up pipx installed Python things
+# Add ~/.local/bin directory to the beginning to pick up pipx installed Python
+# things and have those override system things
 if [ -d "$HOME/.local/bin" ]; then
-    export PATH=$PATH:$HOME/.local/bin
+    export PATH=$HOME/.local/bin:$PATH
 fi
 
 # If git-prompt is installed, run that.
@@ -33,9 +34,11 @@ done
 # Add to man path
 export MANPATH=$MANPATH:$HOME/man
 
-export EDITOR=vim
+export EDITOR=nvim
 
 alias dc='docker-compose'
+alias vi='nvim'
+alias vim='nvim'
 
 # If pyenv is installed, init it
 export PYENV_ROOT="$HOME/.pyenv"
