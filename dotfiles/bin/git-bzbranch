@@ -6,8 +6,11 @@
 
 # This expects Python 3
 
+import argparse
+from dataclasses import dataclass
 from distutils.spawn import find_executable
 from http.client import HTTPSConnection
+from urllib.parse import urlsplit, parse_qs
 import json
 import string
 import subprocess
@@ -18,24 +21,28 @@ GITCMD = find_executable("git")
 HOST = "bugzilla.mozilla.org"
 
 
-def get_bug_data(num=""):
-    while True:
-        if num:
-            conn = HTTPSConnection(HOST)
-            headers = {"Accept": "application/json"}
-            conn.request("GET", "/rest/bug/%s" % num.strip(), headers=headers)
-            resp = conn.getresponse()
-            if resp.status != 200:
-                print("Error %s: %s" % (resp.status, resp.reason))
-                raise Exception("Bad response")
+@dataclass
+class Bug:
+    host: str = HOST
+    bug_id: str = ""
+    summary: str = ""
 
-            data = json.loads(resp.read())
-            bug = data["bugs"][0]
-            print("%s: %s" % (bug["id"], bug["summary"]))
-            if input("Is this right? (Y/n) ").strip() == "y":
-                return (bug["id"], bug["summary"])
 
-        num = input("Bug number?: ")
+def get_bug_summary(bug):
+    if bug.host == "bugzilla.mozilla.org":
+        conn = HTTPSConnection(bug.host)
+        headers = {"Accept": "application/json"}
+        conn.request(
+            "GET", "/rest/bug/%s" % bug.bug_id.strip(), headers=headers,
+        )
+        resp = conn.getresponse()
+        if resp.status != 200:
+            print("Error %s: %s" % (resp.status, resp.reason))
+            raise Exception("Bad response")
+
+        data = json.loads(resp.read())
+        bug.summary = data["bugs"][0]["summary"]
+        return bug
 
 
 ALLOWED = string.ascii_letters + string.digits + " "
@@ -57,15 +64,49 @@ def generate_branch_name(bug_id, bug_sum):
     return branch_name.strip("-")
 
 
-def main(argv):
-    bug_id, bug_sum = get_bug_data(argv and argv[0] or "")
-    branch_name = generate_branch_name(bug_id, bug_sum)
-    ret = input(f"Branch name? [{branch_name}] or bug-{bug_id}-").strip()
+def get_bug_from_url(bug_url):
+    parsed = urlsplit(bug_url)
+    if parsed.netloc == "bugzilla.mozilla.org":
+        bug_id = parse_qs(parsed.query).get("id")
+        if bug_id:
+            return Bug(host=parsed.netloc, bug_id=bug_id[0])
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        "Create a git branch based on a Bugzilla bug number.",
+    )
+    parser.add_argument("bug")
+
+    parsed = parser.parse_args()
+
+    bug_arg = parsed.bug
+    if bug_arg.startswith("http"):
+        bug = get_bug_from_url(bug_arg)
+        if not bug:
+            print("Could not get bug from url {bug_arg!r}")
+            return 1
+
+    else:
+        bug = Bug(host=HOST, bug_id=bug_arg)
+
+    bug = get_bug_summary(bug)
+    if not bug:
+        print("Could not get summary for bug {bug_arg!r}")
+        return 1
+
+    print(f"{bug.bug_id}: {bug.summary}")
+    if input("Is this right? (Y/n) ").strip() != "y":
+        print("Exiting.")
+        return 1
+
+    branch_name = generate_branch_name(bug.bug_id, bug.summary)
+    ret = input(f"Branch name? [{branch_name}] or bug-{bug.bug_id}-").strip()
     if ret:
-        branch_name = f"bug-{bug_id}-{ret}"
+        branch_name = f"bug-{bug.bug_id}-{ret}"
 
     subprocess.check_output([GITCMD, "checkout", "-b", branch_name])
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    sys.exit(main())
