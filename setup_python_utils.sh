@@ -11,14 +11,10 @@ pipx ensurepath
 
 # Use pipx to install other things
 TOINSTALL=(
-    autopep8
-    aws
     bandit
+    build
     check-manifest
-    docker-compose
     flake8
-    hashin
-    piprot
     sphinx
     tox
     twine
