@@ -25,71 +25,78 @@ def path(*args):
 def delete(path):
     if os.path.islink(path):
         if IS_TEST:
-            print('os.unlink %s' % path)
+            print("os.unlink %s" % path)
         else:
             os.unlink(path)
     elif os.path.isfile(path):
         if IS_TEST:
-            print('os.remove %s' % path)
+            print("os.remove %s" % path)
         else:
             os.remove(path)
     elif os.path.isdir(path):
         if IS_TEST:
-            print('shutil.rmtree %s' % path)
+            print("shutil.rmtree %s" % path)
         else:
             shutil.rmtree(path)
 
 
 def copy(src, target):
     if IS_TEST:
-        print('os.symlink %s -> %s' % (src, target))
+        print("os.symlink %s -> %s" % (src, target))
     else:
         os.symlink(src, target)
 
 
 thisdir = os.path.dirname(os.path.realpath(__file__))
-dotfilesdir = path(thisdir, 'dotfiles')
-homedir  = os.path.expanduser('~')
+dotfilesdir = path(thisdir, "dotfiles")
+homedir = os.path.expanduser("~")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = sys.argv[1:]
     if not args:
         print(HELP)
         sys.exit(0)
 
-    if args[0] == 'install':
-        IS_FORCE = '--force' in args
-        IS_TEST = '--test' in args
+    if args[0] == "install":
+        IS_FORCE = "--force" in args
+        IS_TEST = "--test" in args
 
-        print('source: %s' % dotfilesdir)
-        print('target: %s' % homedir)
+        print("source: %s" % dotfilesdir)
+        print("target: %s" % homedir)
 
         for root, dirs, files in os.walk(dotfilesdir):
             for fn in files:
-                pathpart = root[len(dotfilesdir)+1:]
+                pathpart = root[len(dotfilesdir) + 1 :]
                 src = path(root, fn)
                 target = path(homedir, pathpart, fn)
 
-                print('%s -> %s' % (src, target))
+                print("%s -> %s" % (src, target))
 
                 # Create the target directory if it doesn't exist.
                 targetdir = os.path.dirname(target)
                 if not os.path.exists(targetdir):
-                    print('  creating directory %s ...' % targetdir)
+                    print("  creating directory %s ..." % targetdir)
                     os.makedirs(targetdir)
 
                 if os.path.exists(target):
                     if IS_FORCE:
-                        print('  deleting %s ...' % target)
+                        print("  deleting %s ..." % target)
                         delete(target)
                     else:
-                        print('  %s is in the way ... skipping' % target)
+                        print("  %s is in the way ... skipping" % target)
                         continue
 
                 copy(src, target)
 
+        with open(path(homedir, ".bashrc"), "r") as fp:
+            bashrc = fp.read()
+            if "bash_profile" not in bashrc:
+                print("Make sure to add this line to the end of .bashrc:")
+                print()
+                print('[ -n "$PS1" ] && source ~/.bash_profile;')
+
     else:
-        print('unrecognized command %s ... exiting' % args[0])
+        print("unrecognized command %s ... exiting" % args[0])
 
     # FIXME: check command?
