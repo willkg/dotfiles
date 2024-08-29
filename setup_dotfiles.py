@@ -25,24 +25,24 @@ def path(*args):
 def delete(path):
     if os.path.islink(path):
         if IS_TEST:
-            print("os.unlink %s" % path)
+            print(f"os.unlink {path}")
         else:
             os.unlink(path)
     elif os.path.isfile(path):
         if IS_TEST:
-            print("os.remove %s" % path)
+            print(f"os.remove {path}")
         else:
             os.remove(path)
     elif os.path.isdir(path):
         if IS_TEST:
-            print("shutil.rmtree %s" % path)
+            print(f"shutil.rmtree {path}")
         else:
             shutil.rmtree(path)
 
 
 def copy(src, target):
     if IS_TEST:
-        print("os.symlink %s -> %s" % (src, target))
+        print(f"os.symlink {src} -> {target}")
     else:
         os.symlink(src, target)
 
@@ -62,8 +62,8 @@ if __name__ == "__main__":
         IS_FORCE = "--force" in args
         IS_TEST = "--test" in args
 
-        print("source: %s" % dotfilesdir)
-        print("target: %s" % homedir)
+        print(f"source: {dotfilesdir}")
+        print(f"target: {homedir}")
 
         for root, dirs, files in os.walk(dotfilesdir):
             for fn in files:
@@ -71,20 +71,20 @@ if __name__ == "__main__":
                 src = path(root, fn)
                 target = path(homedir, pathpart, fn)
 
-                print("%s -> %s" % (src, target))
+                print(f"{src} -> {target}")
 
                 # Create the target directory if it doesn't exist.
                 targetdir = os.path.dirname(target)
                 if not os.path.exists(targetdir):
-                    print("  creating directory %s ..." % targetdir)
+                    print(f"  creating directory {targetdir} ...")
                     os.makedirs(targetdir)
 
                 if os.path.exists(target):
                     if IS_FORCE:
-                        print("  deleting %s ..." % target)
+                        print(f"  deleting {target} ...")
                         delete(target)
                     else:
-                        print("  %s is in the way ... skipping" % target)
+                        print(f"  {target} is in the way ... skipping")
                         continue
 
                 copy(src, target)
@@ -97,6 +97,6 @@ if __name__ == "__main__":
                 print('[ -n "$PS1" ] && source ~/.bash_profile;')
 
     else:
-        print("unrecognized command %s ... exiting" % args[0])
+        print(f"unrecognized command {args[0]} ... exiting")
 
     # FIXME: check command?
