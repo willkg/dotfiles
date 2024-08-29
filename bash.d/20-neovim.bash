@@ -1,3 +1,5 @@
+#!/bin/bash
+
 export EDITOR=nvim
 
 alias vi='nvim'

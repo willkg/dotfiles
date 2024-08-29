@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Added by uv on 2024-08-28
 if [ -f "${HOME}/.cargo/bin/uv" ]
 then

@@ -1,3 +1,5 @@
+#!/bin/bash
+#
 export MANPATH=$MANPATH:$HOME/man
 
 # Source completions
