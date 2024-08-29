@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+# shellcheck disable=SC2034
 
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,8 +18,13 @@ NONGIT_OK=Yes
 test $# -lt 1 && usage
 
 git checkout main || git checkout master
-for branch in "$@"
+for branch in $@
 do
-    git branch -D "$branch"
-    git push origin :"$branch"
+    echo "Deleting '${branch}' locally ..."
+    git branch -D "${branch}"
+    if [[ $branch == willkg* ]]
+    then
+        echo "Deleting '${branch}' from origin ..."
+        git push origin :"$branch"
+    fi
 done
