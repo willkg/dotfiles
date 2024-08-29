@@ -1,6 +1,12 @@
--- FIXME plugins
+-- FIXME plugins -- switch to packer
 vim.cmd([[
 call plug#begin('~/.local/share/nvim/plugged')
+  " library for other things
+  Plug 'nvim-lua/plenary.nvim'
+  Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.1' }
+  Plug 'nvim-treesitter/nvim-treesitter'
+  Plug 'sharkdp/fd'
+
   " sensible start for configuration
   Plug 'tpope/vim-sensible'
 
@@ -14,7 +20,10 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'neomake/neomake'
   Plug 'Chiel92/vim-autoformat'
   Plug 'editorconfig/editorconfig-vim'
+
+  " dev diary
   Plug 'vimwiki/vimwiki'
+  Plug 'ElPiloto/telescope-vimwiki.nvim'
 
   " opening files
   " nerdtree for file view
@@ -62,6 +71,8 @@ vim.g.vimwiki_conceal_onechar_markers = 0
 -- stop truncating urls which drives me crazy
 vim.g.vimwiki_url_maxsave = 0
 
+require('telescope').load_extension('vw')
+
 -- Shut off code folding
 vim.opt.foldenable = false
 
@@ -95,14 +106,12 @@ endif
 ]])
 
 -- Set leader key to SPACE
-vim.cmd([[
-let mapleader="\<SPACE>"
-]])
+vim.api.nvim_set_keymap("", "<Space>", "<Nop>", { noremap = true, silent = true })
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 -- SPACE-b switch to buffer
-vim.cmd([[
-nnoremap <Leader>b :buffer<SPACE>
-]])
+vim.api.nvim_set_keymap("", "<Leader>b", ":buffer<SPACE>", { noremap = true })
 
 -- Disable mouse in nvim
 vim.opt.mouse = ""
