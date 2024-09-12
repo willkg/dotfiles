@@ -31,7 +31,7 @@ do
     fi
 
     rm -rf "${DEST}"
-    ln -s "${UVDIR}/${ITEM}/bin/python${MINORVERSION}" "${DEST}"
+    ln -s "${UVDIR}/${BASEITEM}/bin/python${MINORVERSION}" "${DEST}"
     echo "${DEST} created."
 done
 
