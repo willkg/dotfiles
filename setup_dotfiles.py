@@ -89,13 +89,6 @@ if __name__ == "__main__":
 
                 copy(src, target)
 
-        with open(path(homedir, ".bashrc"), "r") as fp:
-            bashrc = fp.read()
-            if "bash_profile" not in bashrc:
-                print("Make sure to add this line to the end of .bashrc:")
-                print()
-                print('[ -n "$PS1" ] && source ~/.bash_profile;')
-
     else:
         print(f"unrecognized command {args[0]} ... exiting")
 

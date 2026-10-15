@@ -1,0 +1,9 @@
+#compdef _git-cleanup git-cleanup
+#description clean up an existing branch
+
+_git-cleanup() {
+  _arguments \
+    '*: :_git_cleanup'
+}
+
+_git-cleanup "$@"
